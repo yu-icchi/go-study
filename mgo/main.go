@@ -4,12 +4,19 @@ import (
 	"fmt"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"encoding/json"
 )
 
-type Person struct {
+type People struct {
 	Id string `bson:"_id"`
 	Name string	`bson:"name"`
 	Phone string `bson:"phone"`
+}
+
+type Hoge struct {
+	Id string `bson:"_id"`
+	Name string `bson:"name"`
+	Age int `bson:"age"`
 }
 
 func main() {
@@ -19,19 +26,28 @@ func main() {
 	}
 	defer session.Clone()
 
-	session.SetMode(mgo.Monotonic, true)
+	db := session.DB("test")
 
-	c := session.DB("test").C("people")
-	err = c.Insert(&Person{"0001", "Ale", "+55 53 8116 9639"})
+	result := bson.M{}
+	query := bson.M{}
+	key := "_id"
+	value := "ok3"
+	query[key] = value
+	err = db.C("hoge").Find(query).One(&result)
 	if err != nil {
 		panic(err)
 	}
-
-	result := Person{}
-	err = c.Find(bson.M{}).One(&result)
+	bytes, err := json.Marshal(result)
 	if err != nil {
-		panic(err)
+		return
 	}
+	fmt.Println(string(bytes))
 
-	fmt.Println("Phone:", result.Phone)
+	//hoge := []bson.M{}
+	//err = db.C("hoge").Find(bson.M{}).All(&hoge)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//jh, _ := json.Marshal(hoge)
+	//fmt.Println(string(jh))
 }
