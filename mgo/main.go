@@ -4,50 +4,59 @@ import (
 	"fmt"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"encoding/json"
+	"time"
+	"./mongo"
 )
 
 type People struct {
 	Id string `bson:"_id"`
-	Name string	`bson:"name"`
-	Phone string `bson:"phone"`
+	FullName string `bson:"full_name"`
+	PhoneNumberString string `bson:"phone"`
 }
 
 type Hoge struct {
-	Id string `bson:"_id"`
-	Name string `bson:"name"`
-	Age int `bson:"age"`
+	Id string `bson:"_id",json:"_id"`
+	Name string `bson:"name",json:"name"`
+	Age int `bson:"age",json:"age"`
+	People []People
 }
 
+func (hoge *Hoge) GetCollectionName() string {
+	return "hoge"
+}
+
+const (
+	_ = iota
+	A
+	B
+	C
+)
+
 func main() {
-	session, err := mgo.Dial("localhost:27017")
+
+	fmt.Println(A, B, C)
+
+	session, err := mgo.DialWithInfo(&mgo.DialInfo{
+		Addrs: []string{"localhost:27017"},
+		Database: "test",
+		Timeout: 20 * time.Second,
+	})
 	if err != nil {
 		panic(err)
 	}
 	defer session.Clone()
 
-	db := session.DB("test")
+	// 読み書きをプライマリにする指定(defaultでこうなっている)
+	session.SetMode(mgo.Strong, true)
 
-	result := bson.M{}
-	query := bson.M{}
-	key := "_id"
-	value := "ok3"
-	query[key] = value
-	err = db.C("hoge").Find(query).One(&result)
-	if err != nil {
-		panic(err)
-	}
-	bytes, err := json.Marshal(result)
-	if err != nil {
-		return
-	}
-	fmt.Println(string(bytes))
+	db := session.DB("") // 空文字指定の場合はデフォルトDBになる仕様らしい
 
-	//hoge := []bson.M{}
-	//err = db.C("hoge").Find(bson.M{}).All(&hoge)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//jh, _ := json.Marshal(hoge)
-	//fmt.Println(string(jh))
+	hoge := Hoge{}
+	if err = db.C(hoge.GetCollectionName()).Find(bson.M{"_id": "ok3"}).One(&hoge); err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(hoge.Id, hoge.Age, hoge.Name, hoge.People)
+
+	instance := mongo.GetInstance();
+	instance.Collection("name")
 }
