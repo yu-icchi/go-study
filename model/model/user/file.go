@@ -8,10 +8,10 @@ type FileSchema struct {
 
 type File struct {}
 
-func (f File) Collection() string {
-	return "UserFamily"
+func (f *File) Collection() string {
+	return "UserFile"
 }
 
-func (f File) Find() {
+func (f *File) Find() {
 	fmt.Println("col:" + f.Collection())
 }

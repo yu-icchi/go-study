@@ -6,10 +6,10 @@ type User struct {
 	ID string `bson:"_id"`
 }
 
-func (u User) Collection() string {
+func (u *User) Collection() string {
 	return "User"
 }
 
-func (u User) FindByID(id string) {
+func (u *User) FindByID(id string) {
 	fmt.Println(u.Collection(), id)
 }

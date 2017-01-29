@@ -4,36 +4,32 @@ import (
 	"./admin"
 	"./user"
 	"./family"
-	"reflect"
 )
 
 var (
-	M = newModel()
+	User = &user.User{}
+	UserFile = &user.File{}
+	Family = &family.Family{}
+	FamilyAvatar = &family.Avatar{}
+	FamilySticker = &family.Sticker{}
+	FamilyParts = &family.Parts{}
+	FamilyColor = &family.Color{}
+	FamilyColorSet = &family.ColorSet{}
+	AdminUser = &admin.User{}
+	AdminRole = &admin.Role{}
 )
 
-type Model struct {
-	User user.User
-	UserFile user.File
-	Family family.Family
-	AdminRole admin.Role
-}
-
-func (m Model) Collections() []string {
-	v := reflect.Indirect(reflect.ValueOf(m))
-	t := v.Type()
-
-	cols := []string{}
-	for i := 0; i < t.NumField(); i++ {
-		cols = append(cols, t.Field(i).Name)
-	}
-	return cols
-}
-
-func newModel() Model {
-	return Model{
-		User: user.User{},
-		UserFile: user.File{},
-		Family: family.Family{},
-		AdminRole: admin.Role{},
+func Collections() []string {
+	return []string{
+		User.Collection(),
+		UserFile.Collection(),
+		Family.Collection(),
+		FamilyAvatar.Collection(),
+		FamilySticker.Collection(),
+		FamilyParts.Collection(),
+		FamilyColor.Collection(),
+		FamilyColorSet.Collection(),
+		AdminUser.Collection(),
+		AdminRole.Collection(),
 	}
 }
