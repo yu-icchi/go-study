@@ -11,7 +11,7 @@ type UserDao struct {
 
 func NewUserDao() UserDao {
 	u := UserDao{}
-	u.data = data.NewUserData()
+	u.data = data.NewUser()
 	return u
 }
 

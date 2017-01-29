@@ -7,7 +7,7 @@ type User struct {
 	Date int64 `bson:"time"`
 }
 
-func NewUserData() *User {
+func NewUser() *User {
 	return &User{"", "", 0, 0}
 }
 

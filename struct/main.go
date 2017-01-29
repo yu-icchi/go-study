@@ -9,10 +9,10 @@ import (
 func main() {
 	fmt.Println("逃げ恥")
 
-	user := data.NewUserData()
+	user := data.NewUser()
 	showCollection(user)
 
-	announce := data.NewAnnounceData()
+	announce := data.NewAnnounce()
 	showCollection(announce)
 
 	userDao := dao.NewUserDao()

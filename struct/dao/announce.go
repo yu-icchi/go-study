@@ -10,6 +10,6 @@ type AnnounceDao struct {
 
 func NewAnnounceDao() AnnounceDao {
 	a := AnnounceDao{}
-	a.data = data.NewAnnounceData()
+	a.data = data.NewAnnounce()
 	return a
 }

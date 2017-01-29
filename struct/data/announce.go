@@ -5,7 +5,7 @@ type Announce struct {
 	Title string `bson:"title"`
 }
 
-func NewAnnounceData() *Announce {
+func NewAnnounce() *Announce {
 	return &Announce{}
 }
 
